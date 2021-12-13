@@ -1,7 +1,5 @@
 package com.maruftech.springblog.controllers;
 
-
-import com.maruftech.springblog.config.CustomUserDetails;
 import com.maruftech.springblog.entities.Comment;
 import com.maruftech.springblog.entities.Post;
 import com.maruftech.springblog.entities.User;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class BlogController {
@@ -64,7 +61,7 @@ public class BlogController {
 
     @DeleteMapping(value = "/comment/{id}")
     public boolean deleteComment(@PathVariable Long id){
-        return commentService.deletePost(id);
+        return commentService.deleteComment(id);
     }
 
 
@@ -76,7 +73,7 @@ public class BlogController {
     @PostMapping(value = "/post/postComment")
     public boolean postComment(@RequestBody CommentPojo comment){
         Post post = postService.find(comment.getPostId());
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User creator = userService.getUser(userDetails.getUsername());
         if(post == null || creator == null)
             return false;

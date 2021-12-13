@@ -78,7 +78,7 @@ public class BlogController {
         if(post == null || creator == null)
             return false;
 
-        commentService.comment(new Comment(comment.getText(),post,creator));
+        commentService.addComment(new Comment(comment.getText(),post,creator));
         return true;
     }
 

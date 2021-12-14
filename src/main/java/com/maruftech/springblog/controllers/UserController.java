@@ -27,8 +27,8 @@ public class UserController {
     public String register(@RequestBody UserRegistration userRegistration){
         if(!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation()))
             return "Error the two passwords do not match";
-//        else if(userService.getUser(userRegistration.getUsername()) != null)
-//            return "Error this username already exists";
+        else if(userService.getUser(userRegistration.getUsername()) != null)
+            return "Error this username already exists";
 
       //  Checking for non alphanumerical characters in the username.
         Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");

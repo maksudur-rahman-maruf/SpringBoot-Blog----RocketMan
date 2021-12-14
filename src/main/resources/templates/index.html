@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: header('Blog index')" />
 <body>
 <div id="root">
@@ -8,14 +8,28 @@
         <div class="row">
             <div class="twelve columns">
                 <h1>My blog</h1>
-                <ul>
-                    <li v-for="post in posts">
-                        <h3><a :href="getLink(post)">{{post.title}}</a></h3>
-                        <h6>Created by : {{post.creator.username}}</h6>
-                        <p>{{post.body}}</p>
-                        <hr />
-                    </li>
-                </ul>
+                <h4 v-if="isLoggedIn()">Want to post something?</h4>
+
+               <div id="post" v-if="isLoggedIn()">
+                   <div class="four columns">
+                       <label for="title">Title</label>
+                       <input v-model="title" class="u-full-width" type="text" placeholder="Post Title..." id="title"/>
+                       <label for="body">Body</label>
+                       <textarea v-model="body" class="u-full-width" placeholder="What's on your mind?..." id="body"></textarea>
+                       <input class="u-full-width button-primary" type="submit" v-on:click="post" value="Submit" />
+                   </div>
+               </div>
+
+               <div class="eight columns">
+                   <ul>
+                       <li v-for="post in posts">
+                           <h3><a :href="getLink(post)">{{post.title}}</a></h3>
+                           <h6>Created by : {{post.creator.username}}</h6>
+                           <p>{{post.body}}</p>
+                           <hr />
+                       </li>
+                   </ul>
+               </div>
             </div>
         </div>
     </div>
@@ -26,7 +40,11 @@
 <script>
     var app = new Vue({
         el: '#root',
-        data : {posts: []},
+        data : {
+            posts: [],
+            title: '',
+            body: ''
+        },
         mounted(){
             this.fetchPosts();
         },
@@ -38,7 +56,19 @@
             },
             getLink(post){
                 return '/post/' + post.id;
-            }
+            },
+            post(){
+                axios({
+                    method:'post',
+                    url:'post?access_token=' + getCookie("access_token"),
+                    data:{title:this.title,body:this.body}
+                }).then(function(response){
+                    document.location.replace("/");
+                });
+            },
+            isLoggedIn(){
+                return window.Event.isLoggedIn;
+            },
         }
 
     });

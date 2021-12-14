@@ -20,7 +20,7 @@
                     <h2>Comments</h2>
                     <ul>
                         <li v-for="comment in comments">
-                            <h6>Posted by : <b>{{comment.creator.username}}</b></h6>
+                            <h6>Commented by : <b>{{comment.creator.username}}</b></h6>
                             <p>{{comment.text}}</p>
                         </li>
                     </ul>
@@ -62,6 +62,8 @@
                 }).then(function(response){
                     this.fetchComments();
                 }.bind(this));
+                this.commentText = '';
+
             },
             fetchComments(){
                 axios.get("/comments/" + this.getPostId()).then(function(response){
